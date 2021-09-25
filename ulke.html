@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nexum Challenge</title>
+  <link rel="stylesheet" href="css/challenge.css" />
+</head>
+<body>
+
+    <header>
+        <div class="content">
+            <span class="left-stop">Where in the world?</span>
+            <span class="right-stop circle-icon"></span>
+        </div>
+    </header>
+    
+    <section class="content gen-pad">
+        <div class="content-row">
+            <div class="col-d-12">
+            <button class="back_button" onclick="goBack()">Back</button>
+        </div>
+            <div class="content gen-pad">
+                <div class="col-d-12 country-detail">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        var url_string = (window.location.href).toLowerCase();
+        var url = new URL(url_string);
+        var country = url.searchParams.get("country");
+        console.log(country);
+
+        const country_url='https://restcountries.com/v3/name/'+country+'';
+        async function getCountryDetail(){
+            const response = await fetch(country_url);
+            const data = await response.json();
+            var countryhtml = "";
+            for (var i = 0; i < data.length; i++) {
+                var countryDetail = data[i];
+                console.log(data);
+                if (countryDetail) {
+                    console.log(countryDetail);
+                    countryhtml += 
+                        '<div class="col-d-6 col-t-4">'+
+                            '<div class="country_img">'+
+                            '<img src="'+countryDetail.flags[1]+'" alt="'+countryDetail.name.common+'" />'+
+                            '</div>'+
+                        '</div>'+
+                        '<div class="col-d-6 col-t-8">'+
+                            '<div class="country_text">'+
+                                '<span>'+countryDetail.name.common+'</span>'+
+                                '<div class="col-d-6">'+
+                                    '<p><strong>Native Name: </strong>'+countryDetail.name.official+'</p>'+
+                                    '<p><strong>Population: </strong>11.319,511</p>'+
+                                    '<p><strong>Region: </strong>'+countryDetail.region+'</p>'+
+                                    '<p><strong>Sub Region: </strong>'+countryDetail.subregion+'</p>'+
+                                    '<p><strong>Capital: </strong>'+countryDetail.capital+'</p>'+
+                                '</div>'+
+                                '<div class="col-d-6">'+
+                                    '<p><strong>Top Level Domain: </strong>'+countryDetail.tld+'</p>';
+                                    currencyArray = countryDetail.currencies;
+                                    console.log(currencyArray);
+                                    let curtext = "";
+                                    for (let i in countryDetail.currencies) {
+                                        curtext += countryDetail.currencies[i].name + ", ";
+                                        console.log(curtext);
+                                    }
+                                    countryhtml += '<p><strong>Currencies: </strong>'+curtext+'</p>';
+                                    languageArray = countryDetail.languages;
+                                    console.log(languageArray);
+                                    let langtext = "";
+                                    for (let i in countryDetail.languages) {
+                                        langtext += countryDetail.languages[i] + ", ";
+                                        console.log(langtext);
+                                    }
+                                    countryhtml += '<p><strong>Languages: </strong>'+langtext+'</p>'+
+                                '</div>'+
+                                '<div class="col-d-12 border-countries">'+
+                                    '<p><strong style="float:left;">Border Countries:</strong>';
+                                        borderArray = countryDetail.borders;
+                                        console.log(borderArray);
+                                        let bordertext = "";
+                                        for (var b = 0; b < borderArray.length; b++) {
+                                            bordertext += "<span>"+borderArray[b]+"</span>";
+                                            console.log(bordertext);
+                                        }
+                                        countryhtml += bordertext;
+                                        countryhtml += '</p>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>';
+                }
+            }
+            if (!$.isEmptyObject(countryhtml)) {
+                $('.country-detail').append(countryhtml);
+            }
+        }
+        getCountryDetail();
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nexum Challenge</title>
+  <link rel="stylesheet" href="css/challenge.css" />
+</head>
+<body>
+
+    <header>
+        <div class="content">
+            <span class="left-stop">Where in the world?</span>
+            <span class="right-stop circle-icon"></span>
+        </div>
+    </header>
+    <section class="content gen-pad">
+        <input type="text" class="search left-stop" id="search" placeholder="Search for a country..."/>
+        <select class="filter-select right-stop" id="filter">
+            <option value="0">Filter by Region</option>
+            <option value="Africa">Africa</option>
+            <option value="Americas">America</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europa</option>
+            <option value="Oceania">Oceania</option>
+        </select>
+    </section>
+    <section class="content gen-pad">
+        <div class="content-row country-list">
+        
+    </div>
+    </section>
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const country_all_url='https://restcountries.com/v3/all';
+        async function getCountry(){
+           const response = await fetch(country_all_url);
+           const data = await response.json();
+           var countryhtml = "";
+            for (var i = 0; i < data.length; i++) {
+                var country = data[i];
+                console.log(country);
+                if (country) {
+                    countryhtml += 
+                        '<div class="col-d-3 col-t-6">' +
+                                '<div class="country_box">'+
+                                     '<a href="ulke.html?country=' + country.name.common + '">' +
+                                         '<figure>'+
+                                             '<img src="'+country.flags[1]+'" alt="Ülke Adı" />'+
+                                          '</figure>'+
+                                           '<div class="country_info">'+
+                                               '<span>' + country.name.common + '</span>'+
+                                                '<p><strong>Region: </strong>'+country.region+'</p>'+
+                                                '<p><strong>Official Name: </strong>'+country.name.official+'</p>'+
+                                                '<p><strong>Capital: </strong>'+country.capital+'</p>'+
+                                            '</div>'+
+                                       '</a>'+
+                                 '</div>' +
+                       '</div>';
+                }
+            }
+            
+            if (!$.isEmptyObject(countryhtml)) {
+                $('.country-list').append(countryhtml);
+            }
+        }
+       
+        getCountry();
+
+        $("#search").change(function () {
+            $('.country-list').html(' ');
+            var code = document.getElementById("search");
+            const country_filter_url='https://restcountries.com/v3/name/'+code.value+'';
+            async function getCountryFilter(){
+           const response = await fetch(country_filter_url);
+           const data = await response.json();
+           var countryhtmlfilter = "";
+            for (var i = 0; i < data.length; i++) {
+                var countryfilter = data[i];
+                console.log(countryfilter);
+                if (countryfilter) {
+                    countryhtmlfilter += 
+                        '<div class="col-d-3 col-t-6">' +
+                                '<div class="country_box">'+
+                                     '<a href="ulke.html?country=' + countryfilter.name.common + '">' +
+                                         '<figure>'+
+                                             '<img src="'+countryfilter.flags[1]+'" alt="Ülke Adı" />'+
+                                          '</figure>'+
+                                           '<div class="country_info">'+
+                                               '<span>' + countryfilter.name.common + '</span>'+
+                                                '<p><strong>Region: </strong>'+countryfilter.region+'</p>'+
+                                                '<p><strong>Official Name: </strong>'+countryfilter.name.official+'</p>'+
+                                                '<p><strong>Capital: </strong>'+countryfilter.capital+'</p>'+
+                                            '</div>'+
+                                       '</a>'+
+                                 '</div>' +
+                       '</div>';
+                }
+            }
+            
+            if (!$.isEmptyObject(countryhtmlfilter)) {
+                $('.country-list').append(countryhtmlfilter);
+            }
+            }
+            getCountryFilter();
+        });
+        $('#filter').on('change', function (e) {
+            $('.country-list').html(' ');
+            var optionSelected = $("option:selected", this);
+            var selectedRegion = this.value;
+            const country_select_url='https://restcountries.com/v3/region/'+selectedRegion+'';
+            async function getCountryFilterSelect(){
+           const response = await fetch(country_select_url);
+           const data = await response.json();
+           var countryhtmlselect = "";
+            for (var i = 0; i < data.length; i++) {
+                var countryselect = data[i];
+                if (countryselect) {
+                    countryhtmlselect += 
+                        '<div class="col-d-3 col-t-6">' +
+                                '<div class="country_box">'+
+                                     '<a href="ulke.html?country=' + countryselect.name.common + '">' +
+                                         '<figure>'+
+                                             '<img src="'+countryselect.flags[1]+'" alt="Ülke Adı" />'+
+                                          '</figure>'+
+                                           '<div class="country_info">'+
+                                               '<span>' + countryselect.name.common + '</span>'+
+                                                '<p><strong>Region: </strong>'+countryselect.region+'</p>'+
+                                                '<p><strong>Official Name: </strong>'+countryselect.name.official+'</p>'+
+                                                '<p><strong>Capital: </strong>'+countryselect.capital+'</p>'+
+                                            '</div>'+
+                                       '</a>'+
+                                 '</div>' +
+                       '</div>';
+                }
+            }
+            
+            if (!$.isEmptyObject(countryhtmlselect)) {
+                $('.country-list').append(countryhtmlselect);
+            }
+            }
+            getCountryFilterSelect();
+        });
+    </script>
+</body>
+</html>
